@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>비즈니스영어 2과제 · 실전 문서세트 4 (음성·자동채점)</title>
+<style>
+:root {
+  --bg:#f4f6f9; --card:#ffffff; --ink:#172033; --muted:#667085; --line:#d7dde7;
+  --accent:#2446a8; --accent2:#eef2ff; --good:#157347; --warn:#b26a00; --danger:#b42318;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,"Noto Sans KR",sans-serif}
+button,select,input{font:inherit}
+.topbar{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-weight:800;font-size:18px;flex:1}
+.badge{font-size:12px;padding:5px 9px;border-radius:999px;background:var(--accent2);color:var(--accent);font-weight:700}
+.container{max-width:1180px;margin:0 auto;padding:18px}
+.hero{background:linear-gradient(135deg,#fff,#eef3ff);border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:16px}
+.hero h1{font-size:26px;margin:0 0 8px}
+.hero p{margin:6px 0;color:var(--muted);line-height:1.6}
+.modebar{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:700}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.good{background:var(--good);color:#fff;border-color:var(--good)}
+.btn.danger{background:var(--danger);color:#fff;border-color:var(--danger)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.filters{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:14px 0}
+.filters select{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px;box-shadow:0 2px 8px rgba(30,45,90,.04)}
+.card h3{margin:0 0 7px;font-size:17px}
+.card p{margin:4px 0;color:var(--muted);font-size:14px}
+.card .actions{display:flex;gap:8px;margin-top:12px}
+.study{display:none}
+.study.active{display:block}
+.study-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,.65fr);gap:16px;align-items:start}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+.panel h2{margin:0 0 10px}
+.doc-wrap{background:#eceff3;padding:18px;border-radius:12px;overflow:auto}
+.document{width:100%;min-width:650px;background:#fff;border:1px solid #111;padding:18px 20px;color:#111;font-family:"Times New Roman",serif;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.doc-title{text-align:center;font-weight:800;font-size:24px;letter-spacing:1px;margin-bottom:4px}
+.doc-sub{text-align:center;font-size:12px;margin-bottom:14px}
+.grid{display:grid;border-top:1px solid #111;border-left:1px solid #111;margin:10px 0}
+.grid.two{grid-template-columns:1fr 1fr}
+.grid>div{border-right:1px solid #111;border-bottom:1px solid #111;padding:8px;min-height:58px}
+.doc-table{width:100%;border-collapse:collapse;margin:10px 0;font-size:14px}
+.doc-table th,.doc-table td{border:1px solid #111;padding:7px;text-align:left}
+.remarks{border:1px solid #111;padding:9px;margin-top:8px}
+.signature{margin-top:16px;text-align:right}
+.be-amount{display:inline-block;border:2px solid #111;padding:9px 16px;font-weight:800;font-size:19px;margin:10px 0}
+.letter-head{border-bottom:1px solid #111;padding-bottom:8px;margin-bottom:16px}
+/* --- 실제 무역서식 레이아웃용 --- */
+.form{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.5px}
+.form td{border:1px solid #111;padding:7px 8px;vertical-align:top}
+.form td.lb{font-size:12.5px;line-height:1.5}
+.swift{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.5px}
+.swift td{border:1px solid #111;padding:6px 8px;vertical-align:top}
+.swift td.tag{width:52px;font-weight:800;text-align:center;background:#f0f3f9}
+.swift td.tagname{width:230px;color:#333}
+.letter{font-size:15px;line-height:1.75}
+.letter p{margin:11px 0}
+.letter .letterhead{border-bottom:2px solid #111;padding-bottom:9px;margin-bottom:14px}
+.letter .encl{border-top:1px solid #999;padding-top:7px;margin-top:14px;font-size:13px;color:#444}
+.be-body{font-size:15.5px;line-height:2;margin:14px 0}
+.timer{font-size:40px;font-weight:900;text-align:center;letter-spacing:1px;margin:10px 0}
+.timer.warn{color:var(--warn)}
+.timer.danger{color:var(--danger)}
+.phase{text-align:center;font-weight:800;color:var(--accent);margin-bottom:4px}
+.qbox{border:2px solid var(--accent);background:var(--accent2);border-radius:14px;padding:15px;margin-top:10px}
+.qnum{font-size:13px;font-weight:800;color:var(--accent)}
+.question{font-size:20px;font-weight:800;line-height:1.45;margin:7px 0}
+.hidden-q{filter:blur(8px);user-select:none}
+.control-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.status{font-size:13px;color:var(--muted);line-height:1.5}
+.answer{display:none;margin-top:10px;border-top:1px dashed var(--line);padding-top:10px}
+.answer.show{display:block}
+.answer b{color:var(--good)}
+.progress{height:8px;background:#e9edf4;border-radius:999px;overflow:hidden;margin:8px 0 14px}
+.progress>div{height:100%;background:var(--accent);width:0}
+.scorebox{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.scorebox button{padding:9px;border-radius:9px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.micdot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#bbb;margin-right:6px}
+.micdot.on{background:#d00;box-shadow:0 0 0 5px rgba(220,0,0,.12)}
+.small{font-size:12px;color:var(--muted)}
+.result-list{display:grid;gap:8px;margin-top:10px}
+.result-item{border:1px solid var(--line);border-radius:10px;padding:10px}
+.kbd{font-family:monospace;background:#f0f2f5;padding:2px 5px;border-radius:5px}
+.footer-note{font-size:12px;color:var(--muted);margin:18px 2px 4px;line-height:1.6}
+@media(max-width:900px){
+ .cards{grid-template-columns:1fr 1fr}
+ .study-grid{grid-template-columns:1fr}
+ .filters{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+ .container{padding:10px}
+ .cards{grid-template-columns:1fr}
+ .hero h1{font-size:21px}
+ .document{min-width:620px}
+ .topbar{padding:10px}
+ .timer{font-size:34px}
+}
+
+.auto-feedback{margin-top:10px;border:1px solid var(--line);border-radius:10px;padding:10px;background:#f8fafc}
+.auto-feedback.good{border-color:#9ad0b0;background:#f2fbf5}
+.auto-feedback.mid{border-color:#f1c27d;background:#fff9ef}
+.auto-feedback.bad{border-color:#e6a39e;background:#fff5f4}
+.transcript{font-size:14px;line-height:1.5;margin-top:6px}
+.keyword-hit{display:inline-block;margin:3px 4px 0 0;padding:3px 7px;border-radius:999px;background:#e9f7ef;color:#157347;font-size:12px}
+.keyword-miss{display:inline-block;margin:3px 4px 0 0;padding:3px 7px;border-radius:999px;background:#fdecec;color:#b42318;font-size:12px}
+
+/* 모바일 하단 고정 바: 문서를 보면서 녹음할 수 있게 */
+.mobilebar{display:none}
+@media(max-width:900px){
+ .mobilebar.show{
+   display:flex;align-items:center;gap:10px;
+   position:fixed;left:0;right:0;bottom:0;z-index:50;
+   background:rgba(255,255,255,.98);border-top:1px solid var(--line);
+   padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+   box-shadow:0 -4px 16px rgba(30,45,90,.10);
+ }
+ .mobilebar-timer{font-size:20px;font-weight:900;min-width:64px;text-align:center;letter-spacing:.5px}
+ .mobilebar-timer.warn{color:var(--warn)}
+ .mobilebar-timer.danger{color:var(--danger)}
+ .mobilebar-btns{display:flex;gap:8px;flex:1}
+ .mobilebar-btns .btn{flex:1;padding:12px 6px;font-size:14px}
+ /* 하단 바에 가리지 않도록 여백 확보 */
+ body.has-mobilebar{padding-bottom:96px}
+}
+
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">🎧 비즈니스영어 2과제 · 실전 문서세트 4</div>
+  <span class="badge">10세트 · 50문항 · 신규 2종 포함</span>
+  <button class="btn" id="homeBtn">문제목록</button>
+</div>
+
+<div class="container">
+  <section id="home">
+    <div class="hero">
+      <h1>실제 시험 절차를 반복하는 음성 훈련</h1>
+      <p>문서를 5분 동안 읽고 → 화면에 질문을 보여주지 않은 채 질문을 연속 두 번 듣고 → 30초 안에 영어 완전문장으로 답합니다.</p>
+      <p><b>자동채점:</b> 녹음 답변을 영어 음성인식으로 바꾸고 핵심단어 포함 여부를 확인합니다. 금액·숫자는 콤마/소수점, 영어 숫자표현(<span class="kbd">eighteen thousand</span> 등)까지 폭넓게 인식하고, T/T·L/C 같은 약어도 함께 잡습니다. 지문이 실제 시험처럼 15문장 내외로 길고 세부정보가 많아, 문항도 문서마다 서로 다른 세부내용을 묻습니다. 연습모드는 녹음 즉시 피드백과 모범답안이 함께 열리고, 실전모드는 5문항 종료 후 결과를 공개합니다.</p><p><b>수록 문서(세트 4 · 10종):</b> Switch 선하증권 · <b>해양화물운송장(Sea Waybill)</b> · 특송 항공운송장 · 삼국간무역 상업송장 · 냉동 포장명세서 · 비특혜 원산지증명서 · 은행인수어음 · 양도가능 신용장 · <b>해상보험증권(Marine Insurance Policy)</b> · 무역통신문(보험금 청구). ★ 표시 2종이 이번에 새로 추가된 유형입니다.</p>
+      <div class="modebar">
+        <button class="btn primary" onclick="startRandom('exam')">🎯 랜덤 실전 1세트</button>
+        <button class="btn" onclick="startRandom('practice')">🧩 랜덤 연습 1세트</button>
+        <button class="btn" onclick="showWeak()">🔁 약점문항 보기</button>
+      </div>
+    </div>
+
+    <div class="filters">
+      <select id="catFilter"><option value="">전체 문서유형</option></select>
+      <select id="levelFilter">
+        <option value="">전체 난이도</option><option value="1">Level 1</option><option value="2">Level 2</option><option value="3">Level 3</option>
+      </select>
+      <select id="modeSelect"><option value="practice">연습모드로 시작</option><option value="exam">실전모드로 시작</option></select>
+    </div>
+    <div class="cards" id="cards"></div>
+    <div class="footer-note">
+      ※ 연습모드와 실전모드 모두 준비시간은 기본 5분입니다. 질문은 처음부터 화면에서 흐리게 숨겨지고 기본적으로 연속 2회 재생됩니다. 연습모드에서만 필요할 때 ‘연습용 질문 확인’을 눌러 자막을 볼 수 있으며, 실전모드에서는 질문 자막을 확인할 수 없습니다. 연습모드는 ‘준비 완료 → 질문 시작’으로 일찍 넘어갈 수 있고, 실전모드는 5분을 반드시 채웁니다.
+      브라우저의 음성합성 기능을 사용하므로 기기/브라우저에 따라 음성이 조금 다를 수 있습니다.
+    </div>
+  </section>
+
+  <section class="study" id="study">
+    <div class="study-grid">
+      <div class="panel">
+        <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap">
+          <div>
+            <div class="small" id="setMeta"></div>
+            <h2 id="setTitle"></h2>
+          </div>
+          <button class="btn" onclick="exitStudy()">← 목록</button>
+        </div>
+        <div class="doc-wrap"><div class="document" id="doc"></div></div>
+      </div>
+
+      <div class="panel">
+        <div class="phase" id="phase">준비</div>
+        <div class="timer" id="timer">05:00</div>
+        <div class="progress"><div id="progressBar"></div></div>
+        <div class="status" id="status">문서를 읽고 핵심 정보를 파악하세요.</div>
+        <button class="btn primary" id="readyBtn" onclick="finishPrepEarly()" style="width:100%;margin-top:10px;display:none">준비 완료 → 질문 시작</button>
+
+        <div class="qbox" id="qbox" style="display:none">
+          <div class="qnum" id="qnum"></div>
+          <div class="question" id="question"></div>
+          <div class="small" id="listenStatus"></div>
+          <div class="control-grid">
+            <button class="btn" id="replayBtn" onclick="speakQuestion()">🔊 질문 다시 듣기</button>
+            <button class="btn" id="showQBtn" onclick="toggleQuestion()">👁 질문 보기</button>
+            <button class="btn good" id="recordBtn" onclick="toggleRecording()"><span class="micdot" id="micdot"></span>답변 녹음</button>
+            <button class="btn" id="nextBtn" onclick="nextQuestion()">다음 문제 →</button>
+          </div>
+          <audio id="recordedAudio" controls style="width:100%;margin-top:10px;display:none"></audio>
+          <div class="auto-feedback" id="autoFeedback" style="display:none"></div>
+          <div class="answer" id="answer">
+            <div><b>모범답안</b></div>
+            <div id="answerText" style="margin:6px 0 10px;line-height:1.5"></div>
+            <div class="small">자기채점: 내용(C) 3점 · 발음(P) 0.5점 · 문법(G) 0.5점</div>
+            <div class="scorebox">
+              <button onclick="markScore('good')">✅ 잘함</button>
+              <button onclick="markScore('mid')">△ 다시</button>
+              <button onclick="markScore('bad')">❌ 어려움</button>
+            </div>
+          </div>
+          <button class="btn" id="answerBtn" onclick="toggleAnswer()" style="width:100%;margin-top:10px">모범답안 보기</button>
+        </div>
+
+        <div id="finish" style="display:none">
+          <h3>세트 완료 🎉</h3>
+          <div id="resultSummary"></div>
+          <div class="modebar">
+            <button class="btn primary" onclick="restartCurrent()">다시 풀기</button>
+            <button class="btn" onclick="startRandom(currentMode)">랜덤 다음 세트</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobilebar" id="mobilebar">
+      <div class="mobilebar-timer" id="mTimer">05:00</div>
+      <div class="mobilebar-btns">
+        <button class="btn" id="mReplayBtn" onclick="speakQuestion()">🔊 다시 듣기</button>
+        <button class="btn good" id="mRecordBtn" onclick="toggleRecording()"><span class="micdot" id="mMicdot"></span>답변 녹음</button>
+        <button class="btn" id="mNextBtn" onclick="nextQuestion()">다음 →</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const SETS = [{"id": "s4_bl", "category": "Bill of Lading", "ko": "선하증권", "title": "선하증권 · Switch B/L (중계무역·보조배터리)", "level": 4, "doc": "\n<div class=\"doc-title\">BILL OF LADING</div>\n<div class=\"doc-sub\">SWITCH B/L &nbsp;·&nbsp; ISSUED IN SUBSTITUTION FOR THE ORIGINAL SET &nbsp;·&nbsp; ORIGINAL</div>\n\n<table class=\"form\">\n  <tr>\n    <td class=\"lb\" style=\"width:52%\">Shipper<br>\n      <b>ORIENT MERIDIAN TRADING PTE. LTD.</b><br>18 Robinson Road #12-03, Singapore 048547<br>\n      <i>(Intermediary / middleman)</i></td>\n    <td class=\"lb\">B/L No. <b>SWB-SIN-2026-0471</b><br>\n      Replaces original B/L No. KMT-1180234</td>\n  </tr>\n  <tr>\n    <td class=\"lb\">Consignee<br>\n      <b>ANDES DISTRIBUCIÓN S.A.</b><br>Av. El Dorado 92-40, Bogotá, Colombia</td>\n    <td class=\"lb\">Notify Party<br>Same as consignee<br>Attn: Sra. Carmen Ruiz</td>\n  </tr>\n  <tr>\n    <td class=\"lb\">Ocean Vessel / Voy.<br><b>MSC ORION V. 214W</b></td>\n    <td class=\"lb\">Freight<br><b>FREIGHT PREPAID</b> (payable in Singapore)</td>\n  </tr>\n  <tr>\n    <td class=\"lb\">Port of Loading<br><b>BUSAN, KOREA</b></td>\n    <td class=\"lb\">Port of Discharge<br><b>CARTAGENA, COLOMBIA</b></td>\n  </tr>\n</table>\n\n<table class=\"doc-table\">\n  <tr><th>Container / Seal</th><th>Packages</th><th>Description of Goods</th><th>Gross Weight</th><th>Meas.</th></tr>\n  <tr>\n    <td>MSCU 8840216<br>Seal SG-77402<br>1 x 40' HC</td>\n    <td>310 CARTONS</td>\n    <td>PORTABLE POWER BANKS, 20,000mAh<br>Model PB-200, 3,100 pcs<br>UN3481 — batteries packed with equipment</td>\n    <td>4,650 KGS</td>\n    <td>58.200 CBM</td>\n  </tr>\n</table>\n\n<div class=\"remarks\">\n<b>Switch B/L notice:</b> This Bill of Lading has been issued in substitution for the original set,\nwhich has been surrendered in full to the carrier's agent in Singapore.\n<b>The name of the original shipper and the original invoice value are not disclosed on this document.</b><br>\nOn board date: <b>18 February 2026</b> &nbsp;·&nbsp; Number of originals: <b>THREE (3)</b> &nbsp;·&nbsp;\nPlace and date of issue: Singapore, 24 February 2026\n</div>\n<div class=\"signature\">MEDITERRANEAN CONTAINER LINES — as Carrier<br><i>Signed: Agent, Singapore Branch</i></div>\n", "questions": [{"q": "What kind of bill of lading is this and why was it issued?", "a": "It is a switch bill of lading, issued in substitution for the original set.", "keywords": ["switch"]}, {"q": "What information is not disclosed on this document?", "a": "The name of the original shipper and the original invoice value are not disclosed.", "keywords": ["shipper"]}, {"q": "Where was this bill of lading issued?", "a": "It was issued in Singapore on 24 February 2026.", "keywords": ["singapore"]}, {"q": "What are the port of loading and the port of discharge?", "a": "The port of loading is Busan and the port of discharge is Cartagena.", "keywords": ["cartagena"]}, {"q": "What is the on board date?", "a": "The on board date is 18 February 2026.", "keywords": ["february"]}]}, {"id": "s4_swb", "category": "Sea Waybill", "ko": "해양화물운송장", "title": "해양화물운송장 · 비유통 기명식 (복사용지·근거리 운송)", "level": 3, "doc": "\n<div class=\"doc-title\">SEA WAYBILL</div>\n<div class=\"doc-sub\">NON-NEGOTIABLE &nbsp;·&nbsp; NOT A DOCUMENT OF TITLE &nbsp;·&nbsp; SURRENDER NOT REQUIRED</div>\n\n<table class=\"form\">\n  <tr>\n    <td class=\"lb\" style=\"width:52%\">Shipper<br>\n      <b>HANSUNG PAPER PRODUCTS CO., LTD.</b><br>44 Gongdan-ro, Cheonan, Chungnam, Korea<br>TEL: 041 550 2200</td>\n    <td class=\"lb\">Sea Waybill No. <b>SWL-2026-3318</b><br>Shipper's Ref. HP-EXP-0912</td>\n  </tr>\n  <tr>\n    <td class=\"lb\"><b>Consignee</b> (named — cannot be transferred)<br>\n      <b>TOKYO OFFICE SUPPLY K.K.</b><br>2-6-14 Kanda-Jimbocho, Chiyoda-ku, Tokyo 101-0051, Japan<br>\n      Corporate No. 8010001034592</td>\n    <td class=\"lb\">Notify Party<br>Same as consignee</td>\n  </tr>\n  <tr>\n    <td class=\"lb\">Vessel / Voyage<br><b>SUNNY LAUREL V. 0088N</b></td>\n    <td class=\"lb\">Freight<br><b>FREIGHT PREPAID</b></td>\n  </tr>\n  <tr>\n    <td class=\"lb\">Port of Loading<br><b>PYEONGTAEK, KOREA</b></td>\n    <td class=\"lb\">Port of Discharge<br><b>TOKYO, JAPAN</b></td>\n  </tr>\n  <tr>\n    <td class=\"lb\">Date of Shipment<br><b>9 March 2026</b></td>\n    <td class=\"lb\">Estimated Time of Arrival<br>11 March 2026</td>\n  </tr>\n</table>\n\n<table class=\"doc-table\">\n  <tr><th>Container / Seal</th><th>Packages</th><th>Description of Goods</th><th>Gross Weight</th><th>Meas.</th></tr>\n  <tr>\n    <td>KKFU 5512088<br>Seal KR-30215<br>1 x 20' GP</td>\n    <td>640 CARTONS<br>on 16 pallets</td>\n    <td>A4 COPY PAPER, 80 GSM<br>5 reams per carton, 3,200 reams<br>Recycled content 30%</td>\n    <td>8,320 KGS</td>\n    <td>28.400 CBM</td>\n  </tr>\n</table>\n\n<div class=\"remarks\">\n<b>Delivery terms:</b> As this is a Sea Waybill, <b>the goods will be delivered to the named consignee\non proof of identity only</b>. No original document needs to be surrendered at destination, which allows\nimmediate release on arrival. <b>This waybill is not a document of title and cannot be endorsed or transferred\nto a third party.</b><br>\nThe shipper retains the right of control and may change the consignee by written instruction to the carrier\n<b>before delivery</b>. Payment terms between the parties: T/T 30 days after shipment date.\n</div>\n<div class=\"signature\">EASTERN STAR SHIPPING CO., LTD., as Carrier<br>\nIssued at Pyeongtaek, 9 March 2026 — <i>J. H. Kwon, Documentation Officer</i></div>\n", "questions": [{"q": "Why is a sea waybill not a document of title?", "a": "Because it cannot be endorsed or transferred to a third party.", "keywords": ["transferred"]}, {"q": "What must the consignee show to take delivery of the goods?", "a": "The consignee only needs to show proof of identity.", "keywords": ["identity"]}, {"q": "What right does the shipper retain under this waybill?", "a": "The shipper retains the right of control and may change the consignee before delivery.", "keywords": ["control"]}, {"q": "What are the goods and how many reams are shipped?", "a": "The goods are A4 copy paper, and 3,200 reams are shipped.", "keywords": ["3200"]}, {"q": "When was the shipment made and when is it expected to arrive?", "a": "It was shipped on 9 March 2026 and is expected to arrive on 11 March 2026.", "keywords": ["march"]}]}, {"id": "s4_awb", "category": "Air Waybill", "ko": "항공화물운송장", "title": "항공화물운송장 · 특송 샘플 발송 (원단 스와치)", "level": 2, "doc": "\n<div class=\"doc-title\">EXPRESS AIR WAYBILL</div>\n<div class=\"doc-sub\">SAMPLE SHIPMENT — NO COMMERCIAL VALUE &nbsp;·&nbsp; NOT NEGOTIABLE</div>\n\n<table class=\"form\">\n  <tr>\n    <td class=\"lb\" style=\"width:46%\">Shipper<br>\n      <b>BOMI TEXTILE DESIGN CO., LTD.</b><br>19 Dongdaemun-ro, Jung-gu, Seoul, Korea<br>Contact: Ms. J. Y. Song / 02-2233-8800</td>\n    <td class=\"lb\">AWB No.<br><b>EX-441 9082 3317</b></td>\n    <td class=\"lb\">Service Type<br><b>EXPRESS — NEXT DAY</b></td>\n  </tr>\n  <tr>\n    <td class=\"lb\">Consignee<br>\n      <b>ATELIER MARCHAND SARL</b><br>7 Rue du Faubourg, 75011 Paris, France<br>Contact: M. Bernard Marchand</td>\n    <td class=\"lb\">Carrier<br>SKYLINK EXPRESS</td>\n    <td class=\"lb\">Account No.<br>KR-SEL-77210</td>\n  </tr>\n  <tr>\n    <td class=\"lb\">Origin / Destination<br><b>SEOUL (ICN) → PARIS (CDG)</b></td>\n    <td class=\"lb\">Pickup Date<br>3 April 2026, 16:00</td>\n    <td class=\"lb\">Charges<br><b>BILL SHIPPER</b> (prepaid)</td>\n  </tr>\n</table>\n\n<table class=\"doc-table\">\n  <tr><th>Pieces</th><th>Actual Weight</th><th>Dimensional Weight</th><th>Chargeable Weight</th><th>Contents</th><th>Customs Value</th></tr>\n  <tr>\n    <td>1</td><td>3.2 KG</td><td>5.0 KG<br>(40x30x25 cm)</td><td><b>5.0 KG</b></td>\n    <td>FABRIC SWATCH BOOKS<br>2 books, 120 swatches each<br><b>SAMPLES — NOT FOR RESALE</b></td>\n    <td>EUR 60.00<br><i>for customs purposes only</i></td>\n  </tr>\n</table>\n\n<table class=\"form\">\n  <tr>\n    <td class=\"lb\">Base Charge<br>EUR 84.00</td>\n    <td class=\"lb\">Fuel Surcharge (18%)<br>EUR 15.12</td>\n    <td class=\"lb\">Remote Area Fee<br>EUR 0.00</td>\n    <td class=\"lb\">Total Prepaid<br><b>EUR 99.12</b></td>\n  </tr>\n</table>\n\n<div class=\"remarks\">\n<b>Special Instructions:</b> Samples of no commercial value — customs value declared for duty assessment only.\nDeliver to the addressee <b>in person</b>; if absent, hold at the local depot and notify by SMS.\nSignature on delivery required. Do not leave unattended.<br>\n<b>Transit time guarantee:</b> Delivery by 12:00 on the next business day. If the guaranteed time is missed,\nthe shipper may claim a <b>full refund of the transport charge</b> within 15 days.\n</div>\n", "questions": [{"q": "What is the chargeable weight and why?", "a": "The chargeable weight is 5 kilograms, because the dimensional weight is higher than the actual weight.", "keywords": ["dimensional"]}, {"q": "What are the contents of this shipment?", "a": "The contents are two fabric swatch books, sent as samples not for resale.", "keywords": ["swatch"]}, {"q": "How much is the total prepaid charge?", "a": "The total prepaid charge is EUR 99.12.", "keywords": ["99"]}, {"q": "What should the carrier do if the addressee is absent?", "a": "Hold the shipment at the local depot and notify the addressee by SMS.", "keywords": ["depot"]}, {"q": "What can the shipper claim if the guaranteed delivery time is missed?", "a": "The shipper may claim a full refund of the transport charge within 15 days.", "keywords": ["refund"]}]}, {"id": "s4_ci", "category": "Commercial Invoice", "ko": "상업송장", "title": "상업송장 · 삼국간 무역 (중계업자 발행)", "level": 4, "doc": "\n<div class=\"doc-title\">COMMERCIAL INVOICE</div>\n<div class=\"doc-sub\">TRIANGULAR TRADE — ISSUED BY THE INTERMEDIARY</div>\n\n<table class=\"form\">\n  <tr>\n    <td class=\"lb\" style=\"width:52%\">Seller (Intermediary)<br>\n      <b>ORIENT MERIDIAN TRADING PTE. LTD.</b><br>18 Robinson Road #12-03, Singapore 048547<br>GST Reg. No. M2-0384471-9</td>\n    <td class=\"lb\">Invoice No. / Date<br><b>OMT-INV-2026-0471</b> · 24 February 2026</td>\n  </tr>\n  <tr>\n    <td class=\"lb\">Buyer<br>\n      <b>ANDES DISTRIBUCIÓN S.A.</b><br>Av. El Dorado 92-40, Bogotá, Colombia<br>NIT 900.442.118-3</td>\n    <td class=\"lb\">Buyer's Order No.<br>AD-PO-2026-0088 dated 15 January 2026</td>\n  </tr>\n  <tr>\n    <td class=\"lb\">Goods shipped from<br><b>BUSAN, KOREA</b> (country of origin: Korea)</td>\n    <td class=\"lb\">Goods shipped to<br><b>CARTAGENA, COLOMBIA</b></td>\n  </tr>\n  <tr>\n    <td class=\"lb\">Trade Terms<br><b>CIF CARTAGENA (Incoterms 2020)</b></td>\n    <td class=\"lb\">Payment<br><b>Irrevocable L/C at 60 days after B/L date</b></td>\n  </tr>\n</table>\n\n<table class=\"doc-table\">\n  <tr><th>Description of Goods</th><th>Quantity</th><th>Unit Price</th><th>Amount</th></tr>\n  <tr><td>Portable Power Banks, 20,000mAh, Model PB-200<br>Country of origin: Republic of Korea</td>\n      <td>3,100 PCS</td><td>USD 21.50</td><td>USD 66,650.00</td></tr>\n  <tr><td colspan=\"3\" style=\"text-align:right\">Freight (Busan – Cartagena)</td><td>USD 3,180.00</td></tr>\n  <tr><td colspan=\"3\" style=\"text-align:right\">Marine insurance (110% of CIF, ICC(A))</td><td>USD 770.00</td></tr>\n  <tr><td colspan=\"3\" style=\"text-align:right\"><b>TOTAL CIF CARTAGENA</b></td><td><b>USD 70,600.00</b></td></tr>\n</table>\n\n<div class=\"remarks\">\n<b>Note on triangular trade:</b> The goods are shipped directly from the manufacturing country (Korea) to the\nbuyer's country (Colombia). <b>The seller named on this invoice is the intermediary in Singapore, not the manufacturer.</b>\nThe original supplier's invoice is not enclosed and the original purchase price is not disclosed to the buyer.<br>\nH.S. Code: 8507.60 &nbsp;|&nbsp; Shipping mark: ANDES / BOGOTÁ / C-NO. 1-310 / MADE IN KOREA<br>\nDocuments presented under L/C No. BBOG-DC-2026-1180 issued by Banco de Bogotá.\n</div>\n<div class=\"signature\">ORIENT MERIDIAN TRADING PTE. LTD. — <i>L. C. Tan, Trade Manager</i></div>\n", "questions": [{"q": "Who is the seller on this invoice, and is it the manufacturer?", "a": "The seller is Orient Meridian Trading in Singapore, which is the intermediary, not the manufacturer.", "keywords": ["intermediary"]}, {"q": "From which country are the goods shipped and what is their origin?", "a": "The goods are shipped from Korea, and the country of origin is the Republic of Korea.", "keywords": ["korea"]}, {"q": "What is the total CIF amount?", "a": "The total CIF Cartagena amount is USD 70,600.00.", "keywords": ["70600"]}, {"q": "What are the payment terms?", "a": "Payment is by an irrevocable letter of credit at 60 days after the bill of lading date.", "keywords": ["irrevocable"]}, {"q": "What is not disclosed to the buyer?", "a": "The original supplier's invoice and the original purchase price are not disclosed.", "keywords": ["disclosed"]}]}, {"id": "s4_pl", "category": "Packing List", "ko": "포장명세서", "title": "포장명세서 · 냉동식품 리퍼 컨테이너 (콜드체인)", "level": 3, "doc": "\n<div class=\"doc-title\">PACKING LIST</div>\n<div class=\"doc-sub\">REEFER CONTAINER — TEMPERATURE CONTROLLED CARGO</div>\n\n<table class=\"form\">\n  <tr>\n    <td class=\"lb\" style=\"width:50%\">Exporter<br><b>DONGHAE FROZEN FOODS CO., LTD.</b><br>77 Hangang-ro, Sokcho, Gangwon-do, Korea<br>HACCP Cert. No. KR-HC-2211</td>\n    <td class=\"lb\">P/L No. <b>DFF-PL-2026-0455</b> · 12 May 2026<br>Invoice No. DFF-INV-2026-0455</td>\n  </tr>\n  <tr>\n    <td class=\"lb\">Consignee<br><b>PACIFIC RIM SEAFOOD LLC</b><br>4400 NW 74th Ave., Miami, FL 33166, U.S.A.<br>FDA Reg. No. 18442991026</td>\n    <td class=\"lb\">Vessel / ETD<br>M/V FROST CARRIER V.31E · 18 May 2026<br>Busan → Miami</td>\n  </tr>\n  <tr>\n    <td class=\"lb\">Reefer Container No.<br><b>MWCU 6620881</b> (1 x 40' RF) / Seal KR-88320</td>\n    <td class=\"lb\">Set Temperature<br><b>−18°C</b> &nbsp;|&nbsp; Ventilation: <b>CLOSED</b></td>\n  </tr>\n</table>\n\n<table class=\"doc-table\">\n  <tr><th>Item</th><th>Product</th><th>Pack Size</th><th>Cartons</th><th>Total Qty</th><th>N/W</th><th>G/W</th></tr>\n  <tr><td>1</td><td>Frozen Mackerel Fillet</td><td>10 kg / carton</td><td>420</td><td>4,200 kg</td><td>4,200 kg</td><td>4,536 kg</td></tr>\n  <tr><td>2</td><td>Frozen Squid Rings</td><td>8 kg / carton</td><td>300</td><td>2,400 kg</td><td>2,400 kg</td><td>2,640 kg</td></tr>\n  <tr><td>3</td><td>Frozen Shrimp, peeled</td><td>5 kg / carton</td><td>180</td><td>900 kg</td><td>900 kg</td><td>1,008 kg</td></tr>\n  <tr><td colspan=\"3\" style=\"text-align:right\"><b>TOTAL — 900 CARTONS</b></td><td><b>900</b></td><td><b>7,500 kg</b></td><td><b>7,500 kg</b></td><td><b>8,184 kg</b></td></tr>\n</table>\n\n<div class=\"remarks\">\n<b>Cold chain requirements:</b> The container must be maintained at <b>minus 18 degrees Celsius</b> throughout\nthe voyage. <b>A temperature data logger (No. TL-4471) is placed inside the container</b> and must be handed to\nthe consignee unopened on delivery.<br>\nProduction dates: 2–6 May 2026 &nbsp;|&nbsp; Best before: 2 May 2028 (24 months from production)<br>\nEach carton bears the lot number, production date and the HACCP certification mark.\nShipping mark: PRS / MIAMI / C-NO. 1-900 / PRODUCT OF KOREA / KEEP FROZEN\n</div>\n", "questions": [{"q": "At what temperature must the container be kept?", "a": "The container must be kept at minus 18 degrees Celsius.", "keywords": ["18"]}, {"q": "How many cartons are in the shipment in total?", "a": "There are 900 cartons in total.", "keywords": ["900"]}, {"q": "What device is placed inside the container and what must be done with it?", "a": "A temperature data logger is placed inside and must be handed to the consignee unopened.", "keywords": ["logger"]}, {"q": "What is the total net weight of the shipment?", "a": "The total net weight is 7,500 kilograms.", "keywords": ["7500"]}, {"q": "How long is the shelf life of the products?", "a": "The shelf life is 24 months from the production date.", "keywords": ["24"]}]}, {"id": "s4_co", "category": "Certificate of Origin", "ko": "원산지증명서", "title": "원산지증명서 · 비특혜 일반 C/O (공작기계·철도운송)", "level": 3, "doc": "\n<div class=\"doc-title\">CERTIFICATE OF ORIGIN</div>\n<div class=\"doc-sub\">NON-PREFERENTIAL &nbsp;·&nbsp; ISSUED BY THE KOREA CHAMBER OF COMMERCE &amp; INDUSTRY</div>\n\n<table class=\"form\">\n  <tr>\n    <td class=\"lb\" style=\"width:50%\">1. Consignor / Exporter<br>\n      <b>SAMYANG MACHINE TOOLS CO., LTD.</b><br>210 Namdong-daero, Namdong-gu, Incheon, Korea</td>\n    <td class=\"lb\">Certificate No. <b>NP-2026-KCCI-77104</b><br>Date of issue: 6 June 2026</td>\n  </tr>\n  <tr>\n    <td class=\"lb\">2. Consignee<br>\n      <b>KAZTECH INDUSTRIAL LLP</b><br>Kunayev Street 21, Almaty 050010, Kazakhstan</td>\n    <td class=\"lb\">3. Country of Origin<br><b>REPUBLIC OF KOREA</b></td>\n  </tr>\n  <tr>\n    <td class=\"lb\">4. Transport details<br>\n      By rail from Busan via Trans-Siberian Railway<br>Container TKRU 4418820 · Departure 12 June 2026</td>\n    <td class=\"lb\">5. Remarks<br>\n      Invoice No. SMT-INV-2026-0339 dated 4 June 2026<br>\n      <b>Goods to be re-exported to Uzbekistan after inspection</b></td>\n  </tr>\n</table>\n\n<table class=\"doc-table\">\n  <tr><th>6. Marks and numbers</th><th>7. Number and kind of packages; description of goods</th><th>8. H.S. Code</th><th>9. Quantity / Weight</th></tr>\n  <tr>\n    <td>KAZTECH / ALMATY<br>CASE NO. 1-6<br>MADE IN KOREA</td>\n    <td>6 WOODEN CASES<br><b>CNC VERTICAL MACHINING CENTRES</b><br>Model SM-V850, complete with tool changers</td>\n    <td>8457.10</td>\n    <td>6 UNITS<br>28,800 KGS</td>\n  </tr>\n</table>\n\n<div class=\"remarks\">\n<b>10. Declaration by the exporter</b><br>\nThe undersigned declares that the goods described above were wholly manufactured in the Republic of Korea and\nthat the particulars given are true and correct. This certificate is issued on a <b>non-preferential</b> basis,\nthat is, <b>it does not entitle the importer to any reduced rate of duty</b>; it is issued to satisfy the import\nregulations of the destination country.<br>\nPlace and date: Incheon, 5 June 2026 — <i>C. W. Nam, Export Division</i>\n</div>\n<div class=\"signature\"><b>11. Certification</b> — Certified on the basis of the documents submitted.<br>\nTHE KOREA CHAMBER OF COMMERCE &amp; INDUSTRY, Incheon — 6 June 2026 (Seal)</div>\n", "questions": [{"q": "Is this a preferential or non-preferential certificate, and what does that mean?", "a": "It is non-preferential, so it does not entitle the importer to any reduced rate of duty.", "keywords": ["preferential"]}, {"q": "Why was this certificate issued?", "a": "It was issued to satisfy the import regulations of the destination country.", "keywords": ["regulations"]}, {"q": "How will the goods be transported?", "a": "By rail from Busan via the Trans-Siberian Railway.", "keywords": ["rail"]}, {"q": "What will happen to the goods after inspection?", "a": "The goods will be re-exported to Uzbekistan.", "keywords": ["exported"]}, {"q": "What goods are covered and how many units?", "a": "CNC vertical machining centres, six units.", "keywords": ["machining"]}]}, {"id": "s4_be", "category": "Bill of Exchange", "ko": "환어음", "title": "환어음 · 은행인수어음 150일 (AUD·강관)", "level": 4, "doc": "\n<div class=\"doc-title\">BILL OF EXCHANGE</div>\n<div class=\"doc-sub\">ACCEPTED DRAFT &nbsp;·&nbsp; BANKER'S ACCEPTANCE</div>\n\n<table class=\"form\">\n  <tr>\n    <td class=\"lb\">Draft No. <b>BA-2026-0918</b></td>\n    <td class=\"lb\">Place / Date of issue<br><b>Incheon, Korea · 20 April 2026</b></td>\n    <td class=\"lb\">Tenor<br><b>150 DAYS AFTER B/L DATE</b></td>\n  </tr>\n</table>\n\n<div class=\"be-amount\">AUD 186,500.00</div>\n\n<p class=\"be-body\">\nAt <b>ONE HUNDRED FIFTY (150) DAYS AFTER BILL OF LADING DATE</b> of this FIRST of Exchange\n(Second unpaid) pay to the order of <b>KOREA DEVELOPMENT BANK, SEOUL</b><br>\nthe sum of <b>AUSTRALIAN DOLLARS ONE HUNDRED EIGHTY-SIX THOUSAND FIVE HUNDRED ONLY</b><br>\nValue received and charge the same to account of the drawee.\n</p>\n\n<table class=\"form\">\n  <tr>\n    <td class=\"lb\">To (Drawee)<br>\n      <b>COMMONWEALTH BANK OF AUSTRALIA</b><br>Ground Floor, 201 Sussex St., Sydney NSW 2000</td>\n    <td class=\"lb\">Drawer<br>\n      <b>DAESUNG STEEL PIPE CO., LTD.</b><br>66 Songdo-ro, Incheon, Korea<br><i>(Signed) K. S. Yang, President</i></td>\n  </tr>\n  <tr>\n    <td class=\"lb\">Drawn under L/C No.<br><b>CBA-DC-2026-55418</b> dated 2 April 2026</td>\n    <td class=\"lb\">B/L date<br>28 April 2026 &nbsp;→&nbsp; <b>Maturity: 25 September 2026</b></td>\n  </tr>\n</table>\n\n<div class=\"remarks\">\n<b>ACCEPTANCE</b><br>\nAccepted on <b>6 May 2026</b>, payable at our counters on the maturity date stated above.<br>\n<i>For and on behalf of COMMONWEALTH BANK OF AUSTRALIA — (Signed) Authorised Officer</i><br><br>\nOnce accepted by the bank, this draft becomes a <b>banker's acceptance</b> and may be\n<b>discounted in the money market before maturity</b>. The beneficiary has elected to discount the\naccepted draft at a rate of <b>4.85% per annum</b> in order to obtain funds immediately.\n</div>\n", "questions": [{"q": "What is the tenor of this draft?", "a": "It is payable 150 days after the bill of lading date.", "keywords": ["150 days"]}, {"q": "When does the draft mature?", "a": "The draft matures on 25 September 2026.", "keywords": ["september"]}, {"q": "Which bank accepted the draft and when?", "a": "Commonwealth Bank of Australia accepted it on 6 May 2026.", "keywords": ["commonwealth"]}, {"q": "What can be done with the draft once the bank has accepted it?", "a": "It becomes a banker's acceptance and can be discounted in the money market before maturity.", "keywords": ["discounted"]}, {"q": "At what rate did the beneficiary discount the draft?", "a": "At a rate of 4.85 percent per annum.", "keywords": ["4.85"]}]}, {"id": "s4_lc", "category": "Letter of Credit", "ko": "신용장", "title": "신용장 · 양도가능 신용장 (중계무역·MT700)", "level": 4, "doc": "\n<div class=\"doc-title\">IRREVOCABLE TRANSFERABLE DOCUMENTARY CREDIT</div>\n<div class=\"doc-sub\">MT 700 &nbsp;·&nbsp; TRANSFERABLE</div>\n\n<table class=\"swift\">\n  <tr><td class=\"tag\">40A</td><td class=\"tagname\">Form of Documentary Credit</td><td><b>IRREVOCABLE TRANSFERABLE</b></td></tr>\n  <tr><td class=\"tag\">20</td><td class=\"tagname\">Documentary Credit Number</td><td><b>SCB-SG-DC-2026-9931</b></td></tr>\n  <tr><td class=\"tag\">31C</td><td class=\"tagname\">Date of Issue</td><td>260115 (15 JAN 2026)</td></tr>\n  <tr><td class=\"tag\">31D</td><td class=\"tagname\">Date and Place of Expiry</td><td><b>260430</b> IN SINGAPORE</td></tr>\n  <tr><td class=\"tag\">50</td><td class=\"tagname\">Applicant</td><td>ANDES DISTRIBUCIÓN S.A.<br>AV. EL DORADO 92-40, BOGOTÁ, COLOMBIA</td></tr>\n  <tr><td class=\"tag\">59</td><td class=\"tagname\">First Beneficiary</td><td><b>ORIENT MERIDIAN TRADING PTE. LTD.</b><br>18 ROBINSON ROAD, SINGAPORE</td></tr>\n  <tr><td class=\"tag\">32B</td><td class=\"tagname\">Currency and Amount</td><td><b>USD 70,600.00</b></td></tr>\n  <tr><td class=\"tag\">41D</td><td class=\"tagname\">Available With / By</td><td>STANDARD CHARTERED BANK, SINGAPORE<br>BY NEGOTIATION</td></tr>\n  <tr><td class=\"tag\">42C</td><td class=\"tagname\">Drafts at</td><td>60 DAYS AFTER B/L DATE</td></tr>\n  <tr><td class=\"tag\">44E</td><td class=\"tagname\">Port of Loading</td><td>BUSAN, KOREA</td></tr>\n  <tr><td class=\"tag\">44F</td><td class=\"tagname\">Port of Discharge</td><td>CARTAGENA, COLOMBIA</td></tr>\n  <tr><td class=\"tag\">44C</td><td class=\"tagname\">Latest Date of Shipment</td><td><b>260320 (20 MAR 2026)</b></td></tr>\n  <tr><td class=\"tag\">45A</td><td class=\"tagname\">Description of Goods</td><td>\n      PORTABLE POWER BANKS 20,000MAH MODEL PB-200<br>3,100 PCS AT USD 21.50 PER PC<br>CIF CARTAGENA INCOTERMS 2020</td></tr>\n  <tr><td class=\"tag\">46A</td><td class=\"tagname\">Documents Required</td><td>\n      + SIGNED COMMERCIAL INVOICE IN 3 ORIGINALS<br>\n      + FULL SET 3/3 CLEAN ON BOARD OCEAN B/L TO ORDER AND BLANK ENDORSED<br>\n      + MARINE INSURANCE POLICY FOR 110 PCT OF CIF VALUE, ICC(A)<br>\n      + CERTIFICATE OF ORIGIN ISSUED BY CHAMBER OF COMMERCE</td></tr>\n  <tr><td class=\"tag\">47A</td><td class=\"tagname\">Additional Conditions</td><td>\n      + <b>THIS CREDIT IS TRANSFERABLE ONLY THROUGH STANDARD CHARTERED BANK, SINGAPORE</b><br>\n      + <b>THE FIRST BENEFICIARY MAY SUBSTITUTE ITS OWN INVOICE AND DRAFT FOR THOSE OF THE SECOND BENEFICIARY</b><br>\n      + <b>THE NAME OF THE SECOND BENEFICIARY MUST NOT APPEAR ON ANY DOCUMENT PRESENTED TO THE ISSUING BANK</b><br>\n      + PARTIAL SHIPMENT NOT ALLOWED / TRANSHIPMENT ALLOWED</td></tr>\n  <tr><td class=\"tag\">71B</td><td class=\"tagname\">Charges</td><td>TRANSFER CHARGES ARE FOR ACCOUNT OF THE <b>FIRST BENEFICIARY</b></td></tr>\n  <tr><td class=\"tag\">48</td><td class=\"tagname\">Period for Presentation</td><td>WITHIN 21 DAYS AFTER SHIPMENT DATE BUT WITHIN CREDIT VALIDITY</td></tr>\n</table>\n", "questions": [{"q": "What kind of credit is this?", "a": "It is an irrevocable transferable documentary credit.", "keywords": ["transferable"]}, {"q": "Through which bank may the credit be transferred?", "a": "It may be transferred only through Standard Chartered Bank, Singapore.", "keywords": ["chartered"]}, {"q": "What may the first beneficiary substitute?", "a": "The first beneficiary may substitute its own invoice and draft for those of the second beneficiary.", "keywords": ["substitute"]}, {"q": "What must not appear on the documents presented to the issuing bank?", "a": "The name of the second beneficiary must not appear on any document.", "keywords": ["second"]}, {"q": "Who pays the transfer charges?", "a": "The first beneficiary pays the transfer charges.", "keywords": ["first"]}]}, {"id": "s4_ins", "category": "Marine Insurance Policy", "ko": "해상보험증권", "title": "해상보험증권 · ICC(A) 전위험담보 (보조배터리)", "level": 4, "doc": "\n<div class=\"doc-title\">MARINE CARGO INSURANCE POLICY</div>\n<div class=\"doc-sub\">Issued by SAMHO MARINE &amp; FIRE INSURANCE CO., LTD. &nbsp;·&nbsp; ORIGINAL</div>\n\n<table class=\"form\">\n  <tr>\n    <td class=\"lb\" style=\"width:50%\">Assured<br>\n      <b>ORIENT MERIDIAN TRADING PTE. LTD.</b><br>and/or order</td>\n    <td class=\"lb\">Policy No. <b>MC-2026-0044718</b><br>Date of issue: <b>16 February 2026</b></td>\n  </tr>\n  <tr>\n    <td class=\"lb\">Amount Insured<br><b>USD 77,660.00</b><br><i>(110% of CIF value USD 70,600.00)</i></td>\n    <td class=\"lb\">Premium<br><b>USD 770.00</b> &nbsp;(rate 0.99%)<br>Premium paid: <b>YES</b></td>\n  </tr>\n  <tr>\n    <td class=\"lb\">Conditions of Insurance<br>\n      <b>INSTITUTE CARGO CLAUSES (A)</b><br>\n      Institute War Clauses (Cargo)<br>Institute Strikes Clauses (Cargo)</td>\n    <td class=\"lb\">Voyage<br>\n      From <b>BUSAN, KOREA</b><br>To <b>CARTAGENA, COLOMBIA</b><br>\n      Per <b>MSC ORION V. 214W</b> sailing on or about 18 Feb 2026</td>\n  </tr>\n  <tr>\n    <td class=\"lb\">Subject-matter Insured<br>\n      310 CARTONS OF PORTABLE POWER BANKS<br>3,100 PCS, MODEL PB-200<br>Container MSCU 8840216</td>\n    <td class=\"lb\">Claims payable at<br>\n      <b>BOGOTÁ, COLOMBIA</b><br>in the same currency as the amount insured<br>\n      Settling agent: <b>Aseguradora Andina S.A., Bogotá</b></td>\n  </tr>\n</table>\n\n<div class=\"remarks\">\n<b>Excess / Deductible:</b> This insurance is subject to an excess of <b>USD 250</b> each and every claim,\nexcept in the case of total loss or general average.<br>\n<b>Duty of the assured in case of loss:</b> The assured must take all reasonable measures to minimise the loss\nand to preserve rights against the carrier. <b>Immediate notice of any loss or damage must be given to the\nsettling agent named above, and a survey must be arranged before the goods are removed from the port area.</b>\nClaims must be supported by the original policy, the bill of lading, the commercial invoice, the packing list\nand the survey report.<br>\n<b>Time limit:</b> No claim will be entertained unless notice is given <b>within 60 days</b> of the discharge\nof the goods from the vessel.\n</div>\n<div class=\"signature\">For SAMHO MARINE &amp; FIRE INSURANCE CO., LTD.<br>\n<i>Authorised Signatory — Seoul, 16 February 2026</i></div>\n", "questions": [{"q": "How much is insured, and how was that amount calculated?", "a": "USD 77,660.00 is insured, which is 110 percent of the CIF value.", "keywords": ["110"]}, {"q": "Under which conditions is the cargo insured?", "a": "It is insured under Institute Cargo Clauses A, plus war and strikes clauses.", "keywords": ["institute"]}, {"q": "Where are claims payable and by whom?", "a": "Claims are payable in Bogotá, Colombia, by the settling agent Aseguradora Andina.", "keywords": ["bogot"]}, {"q": "What is the excess applied to each claim?", "a": "An excess of USD 250 applies to each and every claim, except total loss or general average.", "keywords": ["250"]}, {"q": "Within what time must notice of a claim be given?", "a": "Notice must be given within 60 days of the discharge of the goods.", "keywords": ["60"]}]}, {"id": "s4_tc", "category": "Trade Correspondence", "ko": "무역통신문", "title": "무역통신문 · 보험금 청구 (해수 침수 손상)", "level": 4, "doc": "\n<div class=\"doc-title\">TRADE CORRESPONDENCE</div>\n\n<div class=\"letter\">\n<p class=\"letterhead\">\n<b>ANDES DISTRIBUCIÓN S.A.</b><br>\nAv. El Dorado 92-40, Bogotá, Colombia<br>\nTel: +57 1 425 7700 &nbsp;|&nbsp; reclamos@andesdist.co\n</p>\n\n<p>Date: 6 April 2026</p>\n\n<p>The Claims Department<br>\n<b>ASEGURADORA ANDINA S.A.</b><br>\n(Settling agents for Samho Marine &amp; Fire Insurance Co., Ltd.)<br>\nCalle 72 No. 10-34, Bogotá, Colombia</p>\n\n<p>Dear Sirs,</p>\n\n<p><b>Subject: Claim under Marine Cargo Policy No. MC-2026-0044718</b></p>\n\n<p>We write to submit a claim under the above policy in respect of a consignment of 310 cartons of portable\npower banks shipped from Busan on the MSC ORION and discharged at Cartagena on <b>28 March 2026</b>.</p>\n\n<p>On opening the container at our bonded warehouse on 30 March, we found that seawater had entered through a\ndamaged door gasket. <b>Forty-two cartons</b> on the door side were soaked, and the units inside show corrosion\non the terminals and swelling of the battery cells. They are unfit for sale and, being lithium batteries,\ncannot be repaired or reconditioned.</p>\n\n<p>In accordance with the policy conditions we did not remove the goods from the port area before a survey.\nWe notified your office by telephone on the same day, and <b>a surveyor from your panel attended on 31 March</b>.\nHis report, No. CTG-2026-118, is enclosed and confirms that the damage is attributable to seawater ingress\nduring the voyage and not to defective packing.</p>\n\n<p>The insured value of the 42 damaged cartons, calculated on the same basis as the policy, is\n<b>USD 10,522.00</b>. After deduction of the policy excess of USD 250, our claim amounts to\n<b>USD 10,272.00</b>.</p>\n\n<p>We enclose the following documents in support of our claim: the original policy, the full set of bills of\nlading, the commercial invoice, the packing list, the survey report, and photographs of the damaged cartons.\nWe have also lodged a formal notice of loss with the carrier's agent in Cartagena to preserve rights of\nrecovery, as required by the policy, and a copy of that letter is attached.</p>\n\n<p>As the goods were intended for the Easter retail season, this loss has caused us considerable\ninconvenience. We should therefore be grateful if you would examine the claim as a matter of urgency and\nlet us have your settlement <b>within thirty days</b>.</p>\n\n<p>Yours faithfully,<br><br>\n<i>C. Ruiz</i><br>\nCarmen Ruiz<br>Import Manager<br>Andes Distribución S.A.</p>\n\n<p class=\"encl\">Enc. Policy (original) / B/L 3/3 / Invoice / Packing List / Survey Report CTG-2026-118 / Photographs (9) / Copy of notice to carrier</p>\n</div>\n", "questions": [{"q": "How many cartons were damaged and what caused the damage?", "a": "Forty-two cartons were damaged by seawater that entered through a damaged door gasket.", "keywords": ["seawater"]}, {"q": "What did the buyer do before removing the goods from the port area?", "a": "They arranged a survey, and a surveyor attended on 31 March.", "keywords": ["survey"]}, {"q": "How much is the claim after the excess is deducted?", "a": "The claim amounts to USD 10,272.00 after deducting the excess of USD 250.", "keywords": ["10272"]}, {"q": "Why did the buyer lodge a notice of loss with the carrier's agent?", "a": "To preserve rights of recovery, as required by the policy.", "keywords": ["preserve"]}, {"q": "Within what period does the buyer ask for settlement?", "a": "Within thirty days.", "keywords": ["thirty"]}]}];
+
+let currentSet=null, currentMode='practice', qIndex=0, prepTimer=null, responseTimer=null;
+let remaining=300, responseRemaining=30, questionVisible=true;
+let mediaRecorder=null, chunks=[], recording=false, scores=[];
+let recBusy=false;
+let recognition=null, recognitionSupported=false, liveTranscript='';
+let autoResults=[];
+let weak = JSON.parse(localStorage.getItem('be2_weak')||'[]');
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+recognitionSupported = !!SpeechRecognition;
+
+// 문제마다 인식 세션 상태가 꼬이지 않도록, 녹음할 때마다 새 recognition 객체를 만든다.
+function createRecognition(){
+  if(!recognitionSupported) return null;
+  const rec = new SpeechRecognition();
+  rec.lang='en-US';
+  rec.continuous=true;
+  rec.interimResults=true;
+  rec.onresult=(event)=>{
+    let finalText='', interim='';
+    for(let i=event.resultIndex;i<event.results.length;i++){
+      const tx=event.results[i][0].transcript;
+      if(event.results[i].isFinal) finalText += tx + ' ';
+      else interim += tx + ' ';
+    }
+    if(finalText) liveTranscript += finalText;
+    const preview=(liveTranscript+' '+interim).trim();
+    if(currentMode==='practice' && recording){
+      showLiveTranscript(preview);
+    }
+  };
+  rec.onerror=(e)=>{
+    // no-speech, aborted 등은 정상 종료 과정에서도 발생하므로 조용히 무시
+    if(e && (e.error==='no-speech' || e.error==='aborted')) return;
+    if(currentMode==='practice'){
+      const box=document.getElementById('autoFeedback');
+      box.style.display='block';
+      box.className='auto-feedback mid';
+      box.innerHTML='<b>음성인식 안내</b><div class="transcript">브라우저 음성인식이 원활하지 않습니다. 마이크 권한과 Chrome/Edge 사용 여부를 확인해 주세요.</div>';
+    }
+  };
+  return rec;
+}
+
+
+const home=document.getElementById('home'), study=document.getElementById('study');
+const catFilter=document.getElementById('catFilter'), levelFilter=document.getElementById('levelFilter');
+const cards=document.getElementById('cards');
+
+[...new Set(SETS.map(s=>s.category))].forEach(c=>{
+  const o=document.createElement('option');o.value=c;o.textContent=c;catFilter.appendChild(o);
+});
+
+function renderCards(){
+  const c=catFilter.value, l=levelFilter.value;
+  const list=SETS.filter(s=>(!c||s.category===c)&&(!l||String(s.level)===l));
+  cards.innerHTML=list.map(s=>`
+    <div class="card">
+      <div class="badge">${s.category} · Level ${s.level}</div>
+      <h3>${s.title}</h3>
+      <p>${s.ko} · 질문 5개</p>
+      <p>전체 이해 1문항 + 정보탐색/판단 문항</p>
+      <div class="actions">
+        <button class="btn primary" onclick="startSet('${s.id}', document.getElementById('modeSelect').value)">시작</button>
+      </div>
+    </div>`).join('');
+}
+catFilter.onchange=renderCards; levelFilter.onchange=renderCards; renderCards();
+
+// 미리보기(iframe) 안에서 열리면 마이크가 막히므로 상단에 안내 배너를 표시
+if(window.self !== window.top){
+  const banner=document.createElement('div');
+  banner.style.cssText='background:#fff4e5;border:1px solid #f1c27d;color:#8a5a00;padding:12px 14px;border-radius:12px;margin:0 0 14px;font-size:14px;line-height:1.6';
+  banner.innerHTML='⚠ <b>지금 미리보기 창 안에서 보고 있어 마이크 녹음이 차단됩니다.</b><br>이 창에서 <b>우클릭 → "새 탭에서 프레임 열기"</b>로 페이지를 단독으로 열면 녹음이 정상 작동합니다. (또는 파일을 저장해 Edge/Chrome으로 직접 여세요.)';
+  const container=document.querySelector('.container');
+  if(container) container.insertBefore(banner, container.firstChild);
+}
+
+document.getElementById('homeBtn').onclick=exitStudy;
+
+function startRandom(mode){
+  const list=SETS;
+  const s=list[Math.floor(Math.random()*list.length)];
+  startSet(s.id,mode);
+}
+function startSet(id, mode){
+  stopAll();
+  currentSet=SETS.find(s=>s.id===id); currentMode=mode; qIndex=0; scores=[]; autoResults=[];
+  home.style.display='none'; study.classList.add('active');
+  document.getElementById('setTitle').textContent=currentSet.title;
+  document.getElementById('setMeta').textContent=`${currentSet.category} · ${currentSet.ko} · Level ${currentSet.level} · ${mode==='exam'?'실전모드':'연습모드'}`;
+  document.getElementById('doc').innerHTML=currentSet.doc;
+  document.getElementById('qbox').style.display='none';
+  document.getElementById('finish').style.display='none';
+  document.getElementById('phase').textContent='준비시간';
+  document.getElementById('status').textContent='문서를 읽고 핵심 정보를 파악하세요.';
+  document.getElementById('readyBtn').style.display = mode==='practice' ? 'block' : 'none';
+  remaining = 300;
+  updatePrepTimer();
+  prepTimer=setInterval(()=>{
+    remaining--; updatePrepTimer();
+    if(remaining<=0){ clearInterval(prepTimer); beginQuestions(); }
+  },1000);
+}
+function updatePrepTimer(){
+  const m=String(Math.floor(remaining/60)).padStart(2,'0'), s=String(remaining%60).padStart(2,'0');
+  const el=document.getElementById('timer'); el.textContent=`${m}:${s}`;
+  el.className='timer'+(remaining<=30?' danger':remaining<=60?' warn':'');
+  const total=300;
+  document.getElementById('progressBar').style.width=`${100*(1-remaining/total)}%`;
+  syncMobileTimer();
+}
+
+function beginQuestions(){
+  document.getElementById('readyBtn').style.display='none';
+  document.getElementById('qbox').style.display='block';
+  showMobileBar(true);
+  showQuestion();
+}
+function finishPrepEarly(){
+  if(currentMode!=='practice') return;
+  if(prepTimer) clearInterval(prepTimer);
+  prepTimer=null;
+  beginQuestions();
+}
+function showQuestion(){
+  stopSpeech(); stopResponseTimer(); stopRecordingIfNeeded();
+  if(qIndex>=5) return finishSet();
+  const item=currentSet.questions[qIndex];
+  document.getElementById('phase').textContent='질문 응답';
+  document.getElementById('qnum').textContent=`Number ${qIndex+1}`;
+  document.getElementById('question').textContent=item.q;
+  document.getElementById('answerText').textContent=item.a;
+  document.getElementById('answer').classList.remove('show');
+  document.getElementById('recordedAudio').style.display='none';
+  const af=document.getElementById('autoFeedback'); af.style.display='none'; af.innerHTML=''; af.className='auto-feedback';
+  liveTranscript='';
+  document.getElementById('answerBtn').style.display=currentMode==='practice'?'block':'none';
+  document.getElementById('replayBtn').disabled=currentMode==='exam';
+  document.getElementById('showQBtn').style.display=currentMode==='practice'?'block':'none';
+  // 모바일 하단 바 동기화
+  showMobileBar(true);
+  const mReplay=document.getElementById('mReplayBtn'); if(mReplay) mReplay.disabled=currentMode==='exam';
+  updateRecUI();
+  questionVisible=false;
+  applyQuestionVisibility();
+  document.getElementById('status').textContent='질문은 화면에 숨겨진 상태로 연속 두 번 재생됩니다. 두 번 들은 뒤 30초 안에 답하세요.';
+  document.getElementById('listenStatus').textContent='질문 음성 재생 중...';
+  speakTwice(item.q, ()=>startResponseTimer());
+}
+function speakTwice(text, done){
+  if(!('speechSynthesis' in window)){ document.getElementById('listenStatus').textContent='이 브라우저는 음성합성을 지원하지 않습니다.'; done(); return; }
+  let count=0;
+  const run=()=>{
+    const u=new SpeechSynthesisUtterance(text); u.lang='en-US'; u.rate=0.88; u.pitch=1;
+    u.onend=()=>{ count++; if(count<2) setTimeout(run,450); else {document.getElementById('listenStatus').textContent='질문 재생 완료';done();} };
+    speechSynthesis.speak(u);
+  };
+  run();
+}
+function speakQuestion(){
+  if(!currentSet) return;
+  stopSpeech();
+  const u=new SpeechSynthesisUtterance(currentSet.questions[qIndex].q); u.lang='en-US'; u.rate=.88;
+  speechSynthesis.speak(u);
+}
+function stopSpeech(){ if('speechSynthesis' in window) speechSynthesis.cancel(); }
+function startResponseTimer(){
+  responseRemaining=30; updateResponseTimer();
+  responseTimer=setInterval(()=>{
+    responseRemaining--; updateResponseTimer();
+    if(responseRemaining<=0){ stopResponseTimer(); chime(); if(currentMode==='exam') setTimeout(nextQuestion,650); }
+  },1000);
+}
+function updateResponseTimer(){
+  const el=document.getElementById('timer');
+  el.textContent=`00:${String(responseRemaining).padStart(2,'0')}`;
+  el.className='timer'+(responseRemaining<=10?' danger':responseRemaining<=20?' warn':'');
+  document.getElementById('progressBar').style.width=`${100*(1-responseRemaining/30)}%`;
+  syncMobileTimer();
+}
+function stopResponseTimer(){ if(responseTimer) clearInterval(responseTimer); responseTimer=null; }
+function chime(){
+  try {
+    const ac=new (window.AudioContext||window.webkitAudioContext)();
+    const o=ac.createOscillator(), g=ac.createGain(); o.connect(g); g.connect(ac.destination);
+    o.frequency.value=880; g.gain.setValueAtTime(.18,ac.currentTime); g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.45);
+    o.start(); o.stop(ac.currentTime+.46);
+  } catch(e) {}
+}
+function toggleQuestion(){ questionVisible=!questionVisible; applyQuestionVisibility(); }
+function applyQuestionVisibility(){
+  const q=document.getElementById('question');
+  q.classList.toggle('hidden-q',!questionVisible);
+  document.getElementById('showQBtn').textContent=questionVisible?'🙈 질문 다시 가리기':'👁 연습용 질문 확인';
+}
+function toggleAnswer(){ document.getElementById('answer').classList.toggle('show'); }
+function markScore(v){
+  scores[qIndex]=v;
+  if(v!=='good'){
+    const key=currentSet.id+':'+qIndex;
+    if(!weak.includes(key)) weak.push(key);
+    localStorage.setItem('be2_weak',JSON.stringify(weak));
+  }
+  nextQuestion();
+}
+function nextQuestion(){
+  if(!currentSet) return;
+  if(scores[qIndex]===undefined) scores[qIndex]='skip';
+  qIndex++; showQuestion();
+}
+function finishSet(){
+  stopAll();
+  document.getElementById('qbox').style.display='none';
+  document.getElementById('finish').style.display='block';
+  document.getElementById('phase').textContent='완료';
+  document.getElementById('timer').textContent='DONE';
+
+  const recognized=autoResults.filter(Boolean);
+  const totalC=recognized.reduce((sum,r)=>sum+r.cScore,0);
+  const maxC=15;
+  let detail='';
+  for(let i=0;i<5;i++){
+    const r=autoResults[i];
+    if(!r){
+      detail += `<div class="result-item"><b>Q${i+1}</b> · 자동 인식 결과 없음</div>`;
+      continue;
+    }
+    const hitTxt=r.keywords.map(k=>r.hits.includes(k)?`✓ ${k}`:`✕ ${k}`).join(' · ');
+    detail += `<div class="result-item"><b>Q${i+1} · 내용(C) ${r.cScore}/3</b><br>
+      <span class="small">인식: ${r.transcript || '(없음)'}</span><br>
+      <span class="small">핵심어: ${hitTxt}</span></div>`;
+  }
+
+  if(currentMode==='exam'){
+    document.getElementById('resultSummary').innerHTML=`
+      <p><b>자동 내용채점: ${totalC}/${maxC}</b></p>
+      <p class="small">5문항을 모두 마친 뒤 결과를 공개합니다. 핵심단어 포함 여부를 중심으로 한 연습용 자동채점이며, 실제 대회 채점의 발음(P)·문법(G)은 교사 확인이 필요합니다.</p>
+      <div class="result-list">${detail}</div>`;
+  } else {
+    const good=scores.filter(x=>x==='good').length, mid=scores.filter(x=>x==='mid').length, bad=scores.filter(x=>x==='bad'||x==='skip').length;
+    document.getElementById('resultSummary').innerHTML=`
+      <p><b>자동 내용채점: ${totalC}/${maxC}</b></p>
+      <div class="result-list">${detail}</div>
+      <p class="small">자기채점 기록 — ✅ ${good} · △ ${mid} · ❌/미응답 ${bad}</p>`;
+  }
+}
+function restartCurrent(){ if(currentSet) startSet(currentSet.id,currentMode); }
+function exitStudy(){ stopAll(); study.classList.remove('active');home.style.display='block';window.scrollTo(0,0); }
+function stopAll(){
+  if(prepTimer) clearInterval(prepTimer); prepTimer=null;
+  stopResponseTimer(); stopSpeech(); stopRecordingIfNeeded();
+  if(recognition){ try{recognition.onend=null; recognition.abort();}catch(e){} recognition=null; }
+  showMobileBar(false);
+}
+
+function recStatus(msg){
+  // 녹음 관련 상태를 화면(autoFeedback 박스)에 항상 보여줘 어디서 막히는지 확인 가능하게 한다
+  const box=document.getElementById('autoFeedback');
+  if(box){ box.style.display='block'; box.className='auto-feedback'; box.innerHTML='<b>녹음 상태</b><div class="transcript">'+msg+'</div>'; }
+}
+async function toggleRecording(){
+  if(recording){
+    recStatus('녹음을 중지하는 중...');
+    try{ if(mediaRecorder && mediaRecorder.state!=='inactive') mediaRecorder.stop(); else { recording=false; updateRecUI(); } }
+    catch(e){ recording=false; updateRecUI(); }
+    return;
+  }
+  if(recBusy) return;   // 시작 처리 중 중복 클릭 방지
+  recBusy=true;
+  try{ await startRecordingFlow(); } finally { recBusy=false; }
+}
+async function startRecordingFlow(){
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    recStatus('이 브라우저에서는 마이크 접근(getUserMedia)이 지원되지 않습니다. 최신 Edge/Chrome에서 열어 주세요.');
+    return;
+  }
+
+  recStatus('마이크 권한을 확인하는 중... 권한 요청이 뜨면 "허용"을 눌러 주세요.');
+  let stream;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({audio:true});
+  } catch(e) {
+    recording=false; updateRecUI();
+    const inIframe = (window.self !== window.top);
+    const name = e && e.name ? e.name : '오류';
+    if(inIframe){
+      recStatus('이 페이지가 <b>미리보기 창(iframe) 안</b>에서 열려 마이크를 쓸 수 없습니다 ('+name+').<br>➡ 미리보기 창에서 <b>마우스 우클릭 → "새 탭에서 프레임 열기"</b>로 페이지를 단독으로 연 뒤 녹음하면 정상 작동합니다. (또는 이 파일을 저장해 Edge/Chrome으로 직접 여세요.)');
+    } else {
+      recStatus('마이크를 사용할 수 없습니다 ('+name+'). 주소창 왼쪽 자물쇠 아이콘 → 사이트 권한에서 마이크를 "허용"으로 바꾼 뒤, Windows 설정 → 개인정보 → 마이크에서 브라우저 접근이 켜져 있는지도 확인하고 다시 시도해 주세요.');
+    }
+    return;
+  }
+
+  try {
+    chunks=[]; liveTranscript='';
+
+    // 이전 인식 세션 정리 후 새로 생성
+    if(recognition){ try{recognition.onend=null; recognition.abort();}catch(e){} recognition=null; }
+    recognition=createRecognition();
+
+    // MediaRecorder 생성 (일부 환경에서 mimeType 미지정이 더 안정적)
+    try{ mediaRecorder=new MediaRecorder(stream); }
+    catch(e){ mediaRecorder=new MediaRecorder(stream,{mimeType:'audio/webm'}); }
+
+    mediaRecorder.ondataavailable=e=>{ if(e.data && e.data.size>0) chunks.push(e.data); };
+    mediaRecorder.onstop=()=>{
+      const blob=new Blob(chunks,{type:'audio/webm'});
+      const url=URL.createObjectURL(blob);
+      const a=document.getElementById('recordedAudio');a.src=url;
+      a.style.display=currentMode==='practice'?'block':'none';
+      stream.getTracks().forEach(t=>t.stop());
+      if(recognition){ try{recognition.stop();}catch(e){} }
+      recording=false; updateRecUI();
+      setTimeout(()=>evaluateCurrentAnswer(),700);
+    };
+    mediaRecorder.onerror=(ev)=>{ recStatus('녹음 중 오류가 발생했습니다. 다시 시도해 주세요.'); recording=false; updateRecUI(); };
+
+    // 음성인식을 먼저 시작(있으면), 그 다음 녹음 시작
+    if(recognition){ try{recognition.start();}catch(e){} }
+    mediaRecorder.start(); recording=true; updateRecUI();
+
+    if(currentMode==='practice'){
+      const box=document.getElementById('autoFeedback');
+      box.style.display='block'; box.className='auto-feedback';
+      box.innerHTML=recognitionSupported
+        ? '<b>🔴 녹음 중...</b><div class="transcript" id="liveTranscript">말한 내용이 여기에 표시됩니다. 답을 마쳤으면 "녹음 중지"를 누르세요.</div>'
+        : '<b>🔴 녹음 중 · 자동 채점 제한</b><div class="transcript">이 브라우저는 영어 음성인식을 지원하지 않아 텍스트 인식은 안 되지만, 녹음과 다시 듣기는 가능합니다.</div>';
+    } else {
+      recStatus('🔴 녹음 중... 답을 마쳤으면 "녹음 중지"를 누르세요.');
+    }
+  } catch(e) {
+    recording=false; updateRecUI();
+    if(stream){ try{stream.getTracks().forEach(t=>t.stop());}catch(_){} }
+    recStatus('녹음을 시작하지 못했습니다 ('+(e && e.name ? e.name : '오류')+'). 페이지를 새로고침한 뒤 다시 시도해 주세요.');
+  }
+}
+function showLiveTranscript(txt){
+  const el=document.getElementById('liveTranscript');
+  if(el) el.textContent=txt||'말한 내용이 여기에 표시됩니다.';
+}
+function normalizeText(s){
+  return (s||'').toLowerCase().replace(/[^a-z0-9%$\/\-\s]/g,' ').replace(/\s+/g,' ').trim();
+}
+// 숫자 안의 콤마/소수점(.00 등)을 제거해 음성인식 결과와 맞춘다: "10,000.00" -> "10000"
+function digitsOnly(s){
+  return (s||'').toLowerCase().replace(/[^0-9]/g,'');
+}
+const NUMBER_WORDS={
+  zero:'0',one:'1',two:'2',three:'3',four:'4',five:'5',six:'6',seven:'7',eight:'8',
+  nine:'9',ten:'10',eleven:'11',twelve:'12',thirteen:'13',fourteen:'14',fifteen:'15',
+  sixteen:'16',seventeen:'17',eighteen:'18',nineteen:'19',twenty:'20',thirty:'30',
+  forty:'40',fifty:'50',sixty:'60',seventy:'70',eighty:'80',ninety:'90',hundred:'100',
+  thousand:'1000',million:'1000000'
+};
+// 간단한 영어 숫자 구문을 실제 숫자로 환산 (thousand/hundred + 기본 단위 조합 수준)
+function spokenPhrasesToNumbers(text){
+  const units={zero:0,one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12,thirteen:13,fourteen:14,fifteen:15,sixteen:16,seventeen:17,eighteen:18,nineteen:19};
+  const tens={twenty:20,thirty:30,forty:40,fifty:50,sixty:60,seventy:70,eighty:80,ninety:90};
+  const toks=(text||'').split(' ');
+  const found=[];
+  let cur=0, running=0, active=false;
+  const flush=()=>{ const v=running+cur; if(active && v>0) found.push(String(v)); cur=0; running=0; active=false; };
+  for(const w of toks){
+    if(units[w]!==undefined){ cur+=units[w]; active=true; }
+    else if(tens[w]!==undefined){ cur+=tens[w]; active=true; }
+    else if(w==='hundred'){ cur=(cur||1)*100; active=true; }
+    else if(w==='thousand'){ running+=(cur||1)*1000; cur=0; active=true; }
+    else if(w==='million'){ running+=(cur||1)*1000000; cur=0; active=true; }
+    else if(w==='and'){ /* skip */ }
+    else { flush(); }
+  }
+  flush();
+  return found.join(' ');
+}
+function keywordPresent(transcript, kw){
+  const t=normalizeText(transcript), k=normalizeText(kw);
+  if(!k) return false;
+  if(t.includes(k)) return true;
+
+  // 1) 숫자 키워드: 콤마/소수점을 무시하고 숫자만 비교
+  const kDigits=digitsOnly(kw);
+  if(kDigits.length>=2){
+    const tDigits=digitsOnly(transcript);
+    if(tDigits.includes(kDigits)) return true;
+    // "1,900" 같은 값을 "1900" / "one thousand nine hundred" 등으로 말한 경우 대비: 마지막 .00 제거형도 비교
+    const kTrimmed=kDigits.replace(/00$/,'');
+    if(kTrimmed.length>=2 && tDigits.includes(kTrimmed)) return true;
+  }
+
+  // 2) 숫자 단어 <-> 아라비아 숫자 상호 호환
+  if(NUMBER_WORDS[k] && t.includes(NUMBER_WORDS[k])) return true;
+  const words=t.split(' ');
+  for(const w of words){
+    if(NUMBER_WORDS[w] && NUMBER_WORDS[w]===k) return true;
+  }
+  // 2-b) "eighteen thousand", "one thousand nine hundred" 같은 구문을 숫자로 환산해 비교
+  if(kDigits.length>=2){
+    const spoken=spokenPhrasesToNumbers(t);
+    if(spoken.includes(kDigits) || (kDigits.replace(/00$/,'').length>=2 && spoken.includes(kDigits.replace(/00$/,'')))) return true;
+  }
+
+  // 3) 슬래시 표기(t/t, l/c, d/p 등)는 음성인식이 "t t", "l c"로 옮기는 경우가 많음
+  if(k.includes('/')){
+    const spaced=k.replace(/\//g,' ');
+    if(t.includes(spaced)) return true;
+    const joined=k.replace(/\//g,'');
+    if(t.replace(/\s+/g,'').includes(joined)) return true;
+  }
+
+  return false;
+}
+function evaluateCurrentAnswer(){
+  const item=currentSet.questions[qIndex];
+  const transcript=(liveTranscript||'').trim();
+  const kws=item.keywords||[];
+  const hits=kws.filter(k=>keywordPresent(transcript,k));
+  const ratio=kws.length ? hits.length/kws.length : 0;
+  // 핵심어 중심의 연습용 내용 점수: 3 / 1.5 / 0
+  let cScore=0, label='핵심 내용 부족', cls='bad';
+  if(ratio>=0.67){ cScore=3; label='핵심 내용 충족'; cls='good'; }
+  else if(ratio>0){ cScore=1.5; label='일부 핵심어 확인'; cls='mid'; }
+  // 완전문장 여부는 아주 단순한 참고 지표
+  const wc=normalizeText(transcript).split(' ').filter(Boolean).length;
+  const sentenceLike=wc>=4;
+  const result={q:qIndex+1, transcript, keywords:kws, hits, ratio, cScore, sentenceLike};
+  autoResults[qIndex]=result;
+
+  // 실전모드: 답변 녹음이 끝나 채점되면 잠시 후 다음 문제로 자동 진행
+  if(currentMode==='exam'){
+    stopResponseTimer();
+    setTimeout(()=>{ if(currentMode==='exam') nextQuestion(); }, 900);
+    return;
+  }
+
+  if(currentMode==='practice'){
+    const box=document.getElementById('autoFeedback');
+    box.style.display='block'; box.className='auto-feedback '+cls;
+    const tags=kws.map(k=>hits.includes(k)
+      ? `<span class="keyword-hit">✓ ${k}</span>`
+      : `<span class="keyword-miss">✕ ${k}</span>`).join('');
+    const suggest = cScore===3 ? '제안: ✅ 잘함' : cScore===1.5 ? '제안: △ 다시' : '제안: ❌ 어려움';
+    box.innerHTML=`<b>${label} · 내용(C) 자동점수 ${cScore}/3</b>
+      <div class="transcript"><b>인식된 답변:</b> ${transcript || '(인식된 내용 없음)'}</div>
+      <div style="margin-top:6px">${tags}</div>
+      <div class="small" style="margin-top:7px">${sentenceLike?'완전문장 형태로 인식되었습니다.':'답변이 짧게 인식되었습니다. 완전한 문장으로 말해 보세요.'} 발음(P)은 브라우저 음성인식만으로 정확히 채점하기 어려워 자동점수에 포함하지 않습니다.</div>
+      <div class="small" style="margin-top:6px"><b>${suggest}</b> — 아래 모범답안을 확인하고 최종적으로 스스로 채점하세요.</div>`;
+    // 자동채점이 끝나면 연습모드에서는 모범답안을 자동으로 펼쳐 바로 비교할 수 있게 한다
+    document.getElementById('answer').classList.add('show');
+  }
+}
+function stopRecordingIfNeeded(){
+  try{ if(recording && mediaRecorder && mediaRecorder.state!=='inactive') mediaRecorder.stop(); }catch(e){}
+  recording=false; updateRecUI();
+}
+function updateRecUI(){
+  const dot=document.getElementById('micdot'), btn=document.getElementById('recordBtn');
+  if(dot) dot.classList.toggle('on',recording);
+  if(btn) btn.innerHTML=recording?'<span class="micdot on"></span>녹음 중지':'<span class="micdot"></span>답변 녹음';
+  // 모바일 하단 바 녹음 버튼도 동기화
+  const mDot=document.getElementById('mMicdot'), mBtn=document.getElementById('mRecordBtn');
+  if(mDot) mDot.classList.toggle('on',recording);
+  if(mBtn) mBtn.innerHTML=recording?'<span class="micdot on" id="mMicdot"></span>녹음 중지':'<span class="micdot" id="mMicdot"></span>답변 녹음';
+}
+function showMobileBar(show){
+  const bar=document.getElementById('mobilebar');
+  if(!bar) return;
+  bar.classList.toggle('show',!!show);
+  document.body.classList.toggle('has-mobilebar',!!show);
+}
+function syncMobileTimer(){
+  const src=document.getElementById('timer'), dst=document.getElementById('mTimer');
+  if(src && dst){ dst.textContent=src.textContent; dst.className='mobilebar-timer'+(src.classList.contains('danger')?' danger':src.classList.contains('warn')?' warn':''); }
+}
+function showWeak(){
+  if(!weak.length){alert('아직 저장된 약점문항이 없습니다.');return;}
+  const key=weak[Math.floor(Math.random()*weak.length)];
+  const [sid,qi]=key.split(':'); startSet(sid,'practice');
+  setTimeout(()=>{ clearInterval(prepTimer); beginQuestions(); qIndex=Number(qi); showQuestion(); },100);
+}
+</script>
+</body>
+</html>
